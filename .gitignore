@@ -1,0 +1,18 @@
+# Python
+*.pyc
+
+# PyCharm
+.idea
+
+# Local Stuff
+be_core/settings/development_local.py
+
+# Vim
+*.swp
+
+#Temp Files
+*~
+temp
+.swp
+**/*_deploy
+**/*_deploy.json
