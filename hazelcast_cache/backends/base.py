@@ -46,9 +46,10 @@ class BaseHazelcastCache(BaseCache):
         self.server = server
         self.params = params or {}
         self.options = params.get('OPTIONS', {})
-        self.client = self.create_client()
-        self.map_key = 'map'
         self.password = self.get_password()
+        self.name = self.get_name()
+        self.client = self.create_client()
+        self.map_key = self.get_map_key()
 
         # Serializer
         self.serializer_class = self.get_serializer_class()
@@ -65,17 +66,24 @@ class BaseHazelcastCache(BaseCache):
         )
 
     def get_password(self):
-        return self.params.get('password', self.options.get('PASSWORD', None))
+        return self.params.get('password', self.options.get('GROUP_PASSWORD', None))
+
+    def get_name(self):
+        return self.params.get('name', self.options.get('GROUP_NAME', None))
+
+    def get_map_key(self):
+        return self.params.get('map_key', self.options.get('MAP_KEY', 'default'))
 
     def create_client(self):
         logging.basicConfig()
         logging.getLogger().setLevel(logging.WARNING)
 
         config = hazelcast.ClientConfig()
-        config.group_config.name = "dev"
-        config.group_config.password = "dev-pass"
+        config.group_config.name = self.name
+        config.group_config.password = self.password
         config.network_config.connection_attempt_limit = 1
-        config.network_config.addresses.append('172.17.42.1:5701')
+        for server in self.server:
+            config.network_config.addresses.append(server)
 
         client = hazelcast.HazelcastClient(config)
 
@@ -222,7 +230,7 @@ class BaseHazelcastCache(BaseCache):
                 value = client.get_map(self.map_key).get(key).result()
                 if value is None:
                     continue
-                recovered_data[key] = self.get_value(value)
+                recovered_data[map_keys[key]] = self.get_value(value)
 
         return recovered_data
 
@@ -230,13 +238,13 @@ class BaseHazelcastCache(BaseCache):
         """Retrieve many keys."""
         raise NotImplementedError
 
-    def _set_many(self, client, data):
+    def _set_many(self, client, data, timeout):
         # Only if there actually is some data to save
         if not data:
             return True
 
         for k, v in data.iteritems():
-            client.get_map(self.map_key).put(k, v)
+            client.get_map(self.map_key).put(k, v, timeout)
 
         return
 

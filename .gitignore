@@ -16,3 +16,6 @@ temp
 .swp
 **/*_deploy
 **/*_deploy.json
+
+#Sublime
+ftpsync.settings

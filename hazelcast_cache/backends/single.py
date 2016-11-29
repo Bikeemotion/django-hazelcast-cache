@@ -31,7 +31,7 @@ class HazelcastCache(BaseHazelcastCache):
         new_data = {}
         for key in versioned_keys:
             new_data[key] = self.prep_value(data[key._original_key])
-        return self._set_many(self.master_client, new_data)
+        return self._set_many(self.master_client, new_data, timeout)
 
     def get_many(self, keys, version=None):
         versioned_keys = self.make_keys(keys, version=version)
