@@ -16,7 +16,7 @@ from django.test import TestCase, override_settings
 from django.utils.encoding import force_bytes
 
 from tests.testapp.models import Poll, expensive_calculation
-from hazelcast_cache.cache import HazelcastCache, pool
+from hazelcast_cache import HazelcastCache
 
 
 # functions/classes for complex data type tests
@@ -34,9 +34,7 @@ class SetupMixin(object):
 
     @classmethod
     def tearDownClass(cls):
-        for p in cls.processes:
-            p.kill()
-        cls.processes = None
+        pass
 
     def setUp(self):
         self.reset_pool()
@@ -54,7 +52,7 @@ class SetupMixin(object):
         self.cache.clear()
 
     def reset_pool(self):
-        pool.reset()
+        pass
 
     def get_cache(self, backend=None):
         return caches[backend or 'default']
@@ -524,7 +522,7 @@ class ConfigurationTestCase(SetupMixin, TestCase):
         CACHES={
             'default': {
                 'BACKEND': 'hazelcast_cache.HazelcastCache',
-                'LOCATION': '172.17.0.5:5701',
+                'LOCATION': '172.17.0.6:5701',
                 'OPTIONS': {
                     'GROUP_NAME': 'dev',
                     'GROUP_PASSWORD': 'dev-pass',

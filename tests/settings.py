@@ -17,14 +17,12 @@ SECRET_KEY = "shh...it's a seakret"
 
 CACHES = {
     'default': {
-        'default': {
-            'BACKEND': 'hazelcast_cache.HazelcastCache',
-            'LOCATION': '172.17.0.5:5701',
-            'OPTIONS': {
-                'GROUP_NAME': 'dev',
-                'GROUP_PASSWORD': 'dev-pass',
-                'MAP_KEY': 'test'
-            },
+        'BACKEND': 'hazelcast_cache.HazelcastCache',
+        'LOCATION': ['172.17.0.6:5701'],
+        'OPTIONS': {
+            'GROUP_NAME': 'dev',
+            'GROUP_PASSWORD': 'dev-pass',
+            'MAP_KEY': 'test'
         },
     },
 }
