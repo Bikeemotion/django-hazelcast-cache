@@ -5,7 +5,7 @@
 .idea
 
 # Local Stuff
-be_core/settings/development_local.py
+venv/*
 
 # Vim
 *.swp

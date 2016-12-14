@@ -1,1 +1,2 @@
+Djnago>=1.9
 hazelcast-python-client>=3.7.2

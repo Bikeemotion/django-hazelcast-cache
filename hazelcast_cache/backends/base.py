@@ -165,11 +165,11 @@ class BaseHazelcastCache(BaseCache):
     ####################
 
     @get_client(write=True)
-    def add(self, client, key, value):
+    def add(self, client, key, value, timeout=DEFAULT_TIMEOUT):
         """Add a value to the cache, failing if the key already exists.
         Returns ``True`` if the object was added, ``False`` if not.
         """
-        return self._set(client, key, self.prep_value(value))
+        return self._set(client, key, self.prep_value(value), timeout)
 
     @get_client()
     def get(self, client, key, default=None):
